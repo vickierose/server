@@ -65,7 +65,7 @@ io.sockets
 
     function disconnectHandler() {
       io.emit('leave', {
-        user: socket.decoded_token,
+        user: socket.decoded_token._doc,
         time: Date.now()
       })
     }

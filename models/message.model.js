@@ -1,16 +1,20 @@
 const mongoose = require('mongoose');
 
+const messageUser = mongoose.Schema({
+    username: String,
+    password: String,
+    email: String,
+})
+
 const messageSchema = mongoose.Schema({
-    user: {
-        type: mongoose.Schema.ObjectId
-    },
+    user: messageUser,
     msg: {
         type: String,
         required: true
     },
     time: { 
         type: Date,
-        default: Date.now()
+        default: Date.now
     }
 });
 
