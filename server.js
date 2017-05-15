@@ -50,15 +50,17 @@ io.sockets
     }
 
     function chatMessageHandler(msg) {
-      const msgObj = new Message ({
+      const msgObj = {
         msg,
-        user: socket.decoded_token._doc,
-      })
-
-      console.log(msgObj);
+        user: socket.decoded_token._doc
+      }
 
       io.emit('message', msgObj)
-                msgObj.save((err, message) => {
+          const msgObjToSave = new Message({
+            msg: msgObj.msg,
+            user: msgObj.user._id
+          })
+                msgObjToSave.save((err, message) => {
                 if (err) console.log(err);
             });
   }
@@ -74,10 +76,6 @@ io.sockets
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
-
-// io.on('connection', socket => {
-//     console.log('connected to sockets')
-// });
 
 http.listen(3000, () => {
     console.log(`server is running on localhost:3000`)

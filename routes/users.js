@@ -4,7 +4,7 @@ const router = express.Router();
 const User = require('../models/user.model');
 
 router.get('/', (req, res) =>{
-    User.find({}).exec((err, users) =>{
+    User.find({}).select('-password').exec((err, users) =>{
         if(err) res.send(err);
         res.json(users)
     })
