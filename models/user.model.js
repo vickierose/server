@@ -22,10 +22,10 @@ const UserSchema = mongoose.Schema({
         type: [mongoose.Schema.ObjectId],
         ref: 'Chat'
     },
-    // avatar: {
-    //     data: Buffer, 
-    //     contentType: String
-    // }
+    avatar: {
+        data: Buffer, 
+        contentType: String
+    }
 });
 
 module.exports = mongoose.model('User', UserSchema);
