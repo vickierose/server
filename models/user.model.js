@@ -15,10 +15,17 @@ const UserSchema = mongoose.Schema({
     email: {
         type: String
     },
+    status: {
+        type: String
+    },
     chats: {
         type: [mongoose.Schema.ObjectId],
         ref: 'Chat'
-    }
+    },
+    // avatar: {
+    //     data: Buffer, 
+    //     contentType: String
+    // }
 });
 
 module.exports = mongoose.model('User', UserSchema);

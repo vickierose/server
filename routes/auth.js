@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const config = require('../config.json');
+const bcrypt = require('bcryptjs');
 
 const User = require('../models/user.model'); 
 
@@ -19,7 +20,6 @@ router.post('/signup', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-    debugger;
     User.findOne({
         username: req.body.username
     }).exec((err, user) => {
