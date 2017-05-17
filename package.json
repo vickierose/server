@@ -16,6 +16,8 @@
     "mongodb": "^2.2.26",
     "mongoose": "^4.9.7",
     "morgan": "^1.8.1",
+    "passport": "^0.3.2",
+    "passport-google-oauth20": "^1.0.0",
     "socket.io": "^2.0.1",
     "socketio-jwt": "^4.5.0"
   }
