@@ -9,7 +9,7 @@ const User = require('../models/user.model');
 router.post('/signup', (req, res) => {
     const newUser = new User({
         username: req.body.username,
-        password: req.body.password,
+        password: bcrypt.hashSync(req.body.password, 10),
         email: req.body.email
     });
 
@@ -25,9 +25,9 @@ router.post('/login', (req, res) => {
     }).exec((err, user) => {
         if (err) res.send(err);
         if (user === null) {
-            res.status(404).send(404);
+            res.sendStatus(404);
         } else {
-            if (user.password === req.body.password) {
+            if (bcrypt.compareSync(req.body.password, user.password)) {
                 const token = jwt.sign(user, config.jwtSecret, { noTimestamp: true })
                 res.json({
                     user,
@@ -35,7 +35,7 @@ router.post('/login', (req, res) => {
                     tokenType: 'Bearer'
                 });
             } else {
-                res.status(401).send(401);
+                res.sendStatus(401);
             }
         }
     });
