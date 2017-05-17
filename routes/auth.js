@@ -7,9 +7,14 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user.model'); 
 
 router.post('/signup', (req, res) => {
+    let passw = req.body.password;
+    if(passw.length < 3){
+        throw new Error('password is too short')
+    }
+
     const newUser = new User({
         username: req.body.username,
-        password: bcrypt.hashSync(req.body.password, 10),
+        password: bcrypt.hashSync(passw, 10),
         email: req.body.email
     });
 
