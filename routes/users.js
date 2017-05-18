@@ -1,20 +1,8 @@
 const express = require('express');
-var fs = require('fs');
 const router = express.Router();
+const encodeAvatar = require('../helpers/avatarEncoder');
 
 const User = require('../models/user.model');
-
-function encodeAvatar( user ) {
-    const resUser = {
-        username: user.username,
-        email: user.email,
-        status: user.status,
-        password:user.password,
-        _id: user._id,
-        avatar: 'data:image/gif;base64,' + user.avatar.data.toString('base64')
-    };
-    return resUser;
-}
 
 router.get('/', (req, res) =>{
     User.find({}).select('-password').exec((err, users) =>{
@@ -38,19 +26,27 @@ router.get('/:id', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
+    const avatar = () => {
+        if(req.files.avatar){
+            return {
+                data: req.files.avatar.data,
+                contentType: req.files.avatar.mimetype }
+            }else{
+                return {}
+            }
+        }
+    
     const data = {
        username: req.body.username,
        email: req.body.email,
     //    password: req.body.password,
        status: req.body.status,
-       avatar:{data: fs.readFileSync(req.body.avatar),
-                contentType: 'image/jpeg'} 
+       avatar:avatar()
     }
-    User.findOneAndUpdate({ _id: req.params.id }, data)
+    User.findOneAndUpdate({ _id: req.params.id }, data, {"new": true})
         .exec((err, user) => {
-            console.log(user);
             if(err) res.send(err);
-            res.status(200).send(user);
+            res.status(200).send(encodeAvatar(user));
         });
 });
 

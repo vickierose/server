@@ -3,6 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const config = require('../config.json');
 const bcrypt = require('bcryptjs');
+const encodeAvatar = require('../helpers/avatarEncoder');
 
 const User = require('../models/user.model'); 
 
@@ -33,9 +34,14 @@ router.post('/login', (req, res) => {
             res.sendStatus(404);
         } else {
             if (bcrypt.compareSync(req.body.password, user.password)) {
-                const token = jwt.sign(user, config.jwtSecret, { noTimestamp: true })
+                const tokenObj = {
+                    username: user.username,
+                    password: user.password,
+                    _id: user._id
+                }
+                const token = jwt.sign(tokenObj, config.jwtSecret, { noTimestamp: true })
                 res.json({
-                    user,
+                    user: encodeAvatar(user),
                     token,
                     tokenType: 'Bearer'
                 });

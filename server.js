@@ -2,6 +2,7 @@ const express = require('express'),
       app = express(),
       http = require('http').Server(app),
       bodyParser = require('body-parser'),
+      fileUpload = require('express-fileupload'),
       mongoose = require('mongoose'),
       cors = require('cors'),
       morgan = require('morgan');
@@ -20,6 +21,7 @@ const users = require('./routes/users');
 const chat = require('./routes/chat');
 
 app.use(cors());
+app.use(fileUpload());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(morgan('tiny'));
@@ -35,7 +37,7 @@ io.sockets
   }))
   .on('authenticated', socket => {
     io.emit('join', {
-      user: socket.decoded_token._doc,
+      user: socket.decoded_token,
       time: Date.now()
     })
     socket
@@ -52,7 +54,7 @@ io.sockets
     function chatMessageHandler(msg) {
       const msgObj = {
         msg,
-        user: socket.decoded_token._doc
+        user: socket.decoded_token
       }
 
       io.emit('message', msgObj)
