@@ -9,7 +9,6 @@ function encodeAvatar( user ) {
         username: user.username,
         email: user.email,
         status: user.status,
-        password:user.password,
         _id: user._id,
         avatar: avatar()
     };
