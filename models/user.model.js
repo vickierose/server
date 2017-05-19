@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const findOrCreate = require('mongoose-find-or-create');
 
 const emailRE = /^[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})$/;
 const passwordValidator = [
@@ -17,7 +18,7 @@ const UserSchema = mongoose.Schema({
     password: {
         type: String,
         required: true,
-        validate: passwordValidator
+        // validate: passwordValidator
     },
     email: {
         type: String,
@@ -34,7 +35,11 @@ const UserSchema = mongoose.Schema({
     avatar: {
         data: Buffer, 
         contentType: String
+    },
+    googleId: {
+        type: String
     }
 });
+UserSchema.plugin(findOrCreate);
 
 module.exports = mongoose.model('User', UserSchema);

@@ -52,4 +52,32 @@ router.post('/login', (req, res) => {
     });
 });
 
+router.post('/google', (req, res) => {
+    console.log(req)
+    const objToSave = {
+        username: req.body.username,
+        password: req.body.googleId,
+        email: req.body.email,
+        googleId: req.body.googleId,
+        // avatar: req.body.avatar
+    }
+
+    User.findOrCreate({username: req.body.username}, objToSave, 
+    (err, user) => {
+        if (err) res.send(err); 
+
+        const tokenObj = {
+                    username: user.username,
+                    password: user.password,
+                    _id: user._id
+                }
+        const token = jwt.sign(tokenObj, config.jwtSecret, { noTimestamp: true })
+        res.json({
+            user,
+            token,
+            tokenType: 'Bearer'
+        });
+    })
+})
+
 module.exports = router;
