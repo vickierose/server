@@ -3,7 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const config = require('../config.json');
 const bcrypt = require('bcryptjs');
-const encodeAvatar = require('../helpers/avatarEncoder');
+const GoogleAuth = require('google-auth-library');
 
 const User = require('../models/user.model'); 
 
@@ -53,31 +53,35 @@ router.post('/login', (req, res) => {
 });
 
 router.post('/google', (req, res) => {
-    console.log(req)
-    const objToSave = {
-        username: req.body.username,
-        password: req.body.googleId,
-        email: req.body.email,
-        googleId: req.body.googleId,
-        avatar: req.body.avatar
-    }
-
-    User.findOrCreate({username: req.body.username}, objToSave, 
-    (err, user) => {
-        if (err) res.send(err); 
-
-        const tokenObj = {
-                    username: user.username,
-                    password: user.password,
-                    _id: user._id
+    
+    const auth = new GoogleAuth();
+    const client = new auth.OAuth2(config.googleClientId, '', '');
+    client.verifyIdToken(
+        req.body.id_token,
+        config.googleClientId,
+        (e, login) => {
+            const payload = login.getPayload();
+            const userid = payload['sub'];
+            if(payload.aud === config.googleClientId){
+                const resObj = {
+                    username: payload.name,
+                    password: payload.sub,
+                    googleId: payload.sub,
+                    email: payload.email,
+                    avatar: payload.picture
                 }
-        const token = jwt.sign(tokenObj, config.jwtSecret, { noTimestamp: true })
-        res.json({
-            user,
-            token,
-            tokenType: 'Bearer'
-        });
-    })
+                User.findOrCreate({username: payload.name}, resObj, 
+                (err, user) => {
+                    if (err) res.send(err); 
+                    const token = jwt.sign(user, config.jwtSecret, { noTimestamp: true })
+                    res.json({
+                        user,
+                        token,
+                        tokenType: 'Bearer'
+                    });
+                })
+            }
+        })
 })
 
 module.exports = router;

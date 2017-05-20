@@ -30,6 +30,8 @@ app.use('/auth', auth);
 app.use('/users', users);
 app.use('/chat', chat);
 
+app.use(express.static('public'));
+
 io.sockets
   .on('connection', ioJwt.authorize({
     secret: config.jwtSecret,

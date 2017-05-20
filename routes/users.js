@@ -1,8 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const encodeAvatar = require('../helpers/avatarEncoder');
+const cloudinary = require('cloudinary');
 
 const User = require('../models/user.model');
+
+cloudinary.config({
+    cloud_name: 'dfmb0wsun',
+    api_key: '219419628733765',
+    api_secret: 'ZTU7O0Sdv7i9OgIij1wQrmelKho'
+})
 
 router.get('/', (req, res) =>{
     User.find({}).select('-password').exec((err, users) =>{
@@ -20,25 +26,33 @@ router.get('/:id', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-    const avatar = () => {
         if(req.files.avatar){
-            return 'data:image/gif;base64,'+req.files.avatar.data.toString('base64');
-            }else{
-                return ''
-            }
+            const imgBase64String = 'data:image/gif;base64,'+ req.files.avatar.data.toString('base64')
+            cloudinary.uploader.upload(imgBase64String, (result) => {
+                const data = {
+                    username: req.body.username,
+                    email: req.body.email,
+                    status: req.body.status,
+                    avatar: result.url
+                }
+                User.findOneAndUpdate({ _id: req.params.id }, data, {"new": true})
+                    .exec((err, user) => {
+                        if(err) res.send(err);
+                        res.status(200).send(user);
+                    });
+            });
         }
-    const data = {
-       username: req.body.username,
-       email: req.body.email,
-    //    password: req.body.password,
-       status: req.body.status,
-       avatar:avatar()
-    }
-    User.findOneAndUpdate({ _id: req.params.id }, data, {"new": true})
-        .exec((err, user) => {
-            if(err) res.send(err);
-            res.status(200).send(user);
-        });
+    // const data = {
+    //    username: req.body.username,
+    //    email: req.body.email,
+    //    status: req.body.status,
+    //    avatar
+    // }
+    // User.findOneAndUpdate({ _id: req.params.id }, data, {"new": true})
+    //     .exec((err, user) => {
+    //         if(err) res.send(err);
+    //         res.status(200).send(user);
+    //     });
 });
 
 module.exports = router;

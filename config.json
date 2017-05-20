@@ -1,3 +1,4 @@
 {
-    "jwtSecret": "happySillyOne"
+    "jwtSecret": "happySillyOne",
+    "googleClientId": "886894346654-eekbgqs2hps8v1tlj96u3m822f6gqmmb.apps.googleusercontent.com"
 }
