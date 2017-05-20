@@ -37,6 +37,7 @@ router.post('/login', (req, res) => {
                 const tokenObj = {
                     username: user.username,
                     password: user.password,
+                    avatar: user.avatar,
                     _id: user._id
                 }
                 const token = jwt.sign(tokenObj, config.jwtSecret, { noTimestamp: true })

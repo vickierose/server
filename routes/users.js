@@ -26,33 +26,22 @@ router.get('/:id', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-        if(req.files.avatar){
-            const imgBase64String = 'data:image/gif;base64,'+ req.files.avatar.data.toString('base64')
-            cloudinary.uploader.upload(imgBase64String, (result) => {
-                const data = {
-                    username: req.body.username,
-                    email: req.body.email,
-                    status: req.body.status,
-                    avatar: result.url
-                }
-                User.findOneAndUpdate({ _id: req.params.id }, data, {"new": true})
-                    .exec((err, user) => {
-                        if(err) res.send(err);
-                        res.status(200).send(user);
-                    });
-            });
-        }
-    // const data = {
-    //    username: req.body.username,
-    //    email: req.body.email,
-    //    status: req.body.status,
-    //    avatar
-    // }
-    // User.findOneAndUpdate({ _id: req.params.id }, data, {"new": true})
-    //     .exec((err, user) => {
-    //         if(err) res.send(err);
-    //         res.status(200).send(user);
-    //     });
+    if(req.files.avatar){
+        const imgBase64String = 'data:image/gif;base64,'+ req.files.avatar.data.toString('base64')
+        cloudinary.uploader.upload(imgBase64String, (result) => {
+            const data = {
+                username: req.body.username,
+                email: req.body.email,
+                status: req.body.status,
+                avatar: result.url
+            }
+            User.findOneAndUpdate({ _id: req.params.id }, data, {"new": true})
+                .exec((err, user) => {
+                    if(err) res.send(err);
+                    res.status(200).send(user);
+                });
+        });
+    }
 });
 
 module.exports = router;

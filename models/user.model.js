@@ -32,10 +32,6 @@ const UserSchema = mongoose.Schema({
         type: [mongoose.Schema.ObjectId],
         ref: 'Chat'
     },
-    // avatar: {
-    //     data: Buffer, 
-    //     contentType: String
-    // },
     avatar: {
         type: String
     },
