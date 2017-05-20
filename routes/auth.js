@@ -41,7 +41,7 @@ router.post('/login', (req, res) => {
                 }
                 const token = jwt.sign(tokenObj, config.jwtSecret, { noTimestamp: true })
                 res.json({
-                    user: encodeAvatar(user),
+                    user,
                     token,
                     tokenType: 'Bearer'
                 });
@@ -59,7 +59,7 @@ router.post('/google', (req, res) => {
         password: req.body.googleId,
         email: req.body.email,
         googleId: req.body.googleId,
-        // avatar: req.body.avatar
+        avatar: req.body.avatar
     }
 
     User.findOrCreate({username: req.body.username}, objToSave, 

@@ -37,7 +37,7 @@ io.sockets
   }))
   .on('authenticated', socket => {
     io.emit('join', {
-      user: socket.decoded_token,
+      user: socket.decoded_token._doc ? socket.decoded_token._doc : socket.decoded_token,
       time: Date.now()
     })
     socket
@@ -54,7 +54,7 @@ io.sockets
     function chatMessageHandler(msg) {
       const msgObj = {
         msg,
-        user: socket.decoded_token
+        user: socket.decoded_token._doc ? socket.decoded_token._doc : socket.decoded_token
       }
 
       io.emit('message', msgObj)
@@ -62,14 +62,14 @@ io.sockets
             msg: msgObj.msg,
             user: msgObj.user._id
           })
-                msgObjToSave.save((err, message) => {
-                if (err) console.log(err);
+          msgObjToSave.save((err, message) => {
+          if (err) console.log(err);
             });
   }
 
     function disconnectHandler() {
       io.emit('leave', {
-        user: socket.decoded_token,
+        user: socket.decoded_token._doc ? socket.decoded_token._doc : socket.decoded_token,
         time: Date.now()
       })
     }
