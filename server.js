@@ -13,7 +13,7 @@ const express = require('express'),
 
 const Message = require('./models/message.model');
 
-mongoose.connect('mongodb://localhost/chatdb');
+mongoose.connect('mongodb://vickie:13reasons@ds129641.mlab.com:29641/chatdb');
 const db = mongoose.connection;
 
 const auth = require('./routes/auth');

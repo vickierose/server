@@ -30,7 +30,7 @@ const UserSchema = mongoose.Schema({
     },
     chats: {
         type: [mongoose.Schema.ObjectId],
-        ref: 'Chat'
+        ref: 'ChatRoom'
     },
     avatar: {
         type: String
