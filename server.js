@@ -9,7 +9,8 @@ const express = require('express'),
       jwt = require('jsonwebtoken'),
       io = require('socket.io')(http),
       ioJwt = require('socketio-jwt'),
-      config = require('./config.json');
+      config = require('./config.json'),
+      port = process.env.PORT || 3000;
 
 const Message = require('./models/message.model');
 
@@ -81,6 +82,6 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
-http.listen(3000, () => {
-    console.log(`server is running on localhost:3000`)
+http.listen(port, () => {
+    console.log(`server is running on localhost:` + port)
 });
