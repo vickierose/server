@@ -26,7 +26,8 @@ router.get('/:id', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-    if(req.files.avatar){
+    console.log(req.body, req.files);
+    if(req.files){
         const imgBase64String = 'data:image/gif;base64,'+ req.files.avatar.data.toString('base64')
         cloudinary.uploader.upload(imgBase64String, (result) => {
             const data = {
@@ -41,7 +42,18 @@ router.put('/:id', (req, res) => {
                     res.status(200).send(user);
                 });
         });
-    }
+    }else if (req.files ===null){
+        const data = {
+            username: req.body.username,
+            email: req.body.email,
+            status: req.body.status,
+        }
+        User.findOneAndUpdate({ _id: req.params.id }, data, {"new": true})
+            .exec((err, user) => {
+                if(err) res.send(err);
+                res.status(200).send(user);
+            });
+        }
 });
 
 module.exports = router;
