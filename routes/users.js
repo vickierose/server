@@ -34,7 +34,7 @@ router.put('/:id', (req, res) => {
                 username: req.body.username,
                 email: req.body.email,
                 status: req.body.status,
-                avatar: result.url
+                avatar: result.secure_url
             }
             User.findOneAndUpdate({ _id: req.params.id }, data, {"new": true})
                 .exec((err, user) => {
